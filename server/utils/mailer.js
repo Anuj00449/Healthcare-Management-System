@@ -125,32 +125,26 @@
 
 // module.exports = { sendMail, verifyMailer };
 
-
 const nodemailer = require("nodemailer");
+const dns = require("dns");
 
-// ================= TRANSPORTER =================
+// ✅ Force Node.js to prefer IPv4
+dns.setDefaultResultOrder("ipv4first");
+
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST || "smtp.gmail.com",
-  port: Number(process.env.SMTP_PORT || 587),
-  secure: false,
+  service: "gmail",
 
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
   },
 
-  // 🔥 FIX: Render IPv6 issue
-  family: 4,
-
-  tls: {
-    rejectUnauthorized: false,
-  },
-
-  connectionTimeout: 10000,
+  connectionTimeout: 20000,
+  greetingTimeout: 20000,
+  socketTimeout: 20000,
 });
 
-// ================= VERIFY =================
-async function verifyMailer() {
+const verifyMailer = async () => {
   try {
     if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
       console.warn("⚠️ SMTP credentials missing");
@@ -159,21 +153,19 @@ async function verifyMailer() {
 
     await transporter.verify();
     console.log("✅ Mail server is ready");
-  } catch (error) {
-    // safe in production (Render often blocks verify)
-    console.log("⚠️ Mail verify skipped on production");
+  } catch (err) {
+    console.log("⚠️ Mail verify skipped:", err.message);
   }
-}
+};
 
-// ================= SEND MAIL =================
-async function sendMail({ to, subject, html, attachments = [] }) {
+const sendMail = async ({ to, subject, html, attachments = [] }) => {
   try {
     if (!to || !subject || !html) {
-      throw new Error("Missing required email fields");
+      throw new Error("Missing email fields");
     }
 
     const info = await transporter.sendMail({
-      from: `"${process.env.APP_NAME || "Healthcare Booking App"}" <${process.env.SMTP_USER}>`,
+      from: `"${process.env.APP_NAME || "MediBook"}" <${process.env.SMTP_USER}>`,
       to,
       subject,
       html,
@@ -184,10 +176,8 @@ async function sendMail({ to, subject, html, attachments = [] }) {
     return info;
   } catch (error) {
     console.error("❌ Email send failed:", error.message);
-
-    // 🔥 IMPORTANT: don't crash app
     return null;
   }
-}
+};
 
 module.exports = { sendMail, verifyMailer };

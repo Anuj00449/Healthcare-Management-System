@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/static/css/main.03cf3ffe.css",
+    "main.js": "/static/js/main.d4894f6d.js",
+    "static/js/239.c6b6de5e.chunk.js": "/static/js/239.c6b6de5e.chunk.js",
+    "static/js/977.3296816b.chunk.js": "/static/js/977.3296816b.chunk.js",
+    "static/js/732.6fc3243e.chunk.js": "/static/js/732.6fc3243e.chunk.js",
+    "static/media/medibook.jpg": "/static/media/medibook.2feca1a062cb2f239342.jpg",
+    "index.html": "/index.html",
+    "main.03cf3ffe.css.map": "/static/css/main.03cf3ffe.css.map",
+    "main.d4894f6d.js.map": "/static/js/main.d4894f6d.js.map",
+    "239.c6b6de5e.chunk.js.map": "/static/js/239.c6b6de5e.chunk.js.map",
+    "977.3296816b.chunk.js.map": "/static/js/977.3296816b.chunk.js.map",
+    "732.6fc3243e.chunk.js.map": "/static/js/732.6fc3243e.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.03cf3ffe.css",
+    "static/js/main.d4894f6d.js"
+  ]
+}

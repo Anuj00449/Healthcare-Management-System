@@ -126,25 +126,15 @@
 // module.exports = { sendMail, verifyMailer };
 
 const nodemailer = require("nodemailer");
-const dns = require("dns");
-
-dns.setDefaultResultOrder("ipv4first");
 
 const transporter = nodemailer.createTransport({
-  host: "74.125.200.108",
-  port: 587,
+  host: process.env.SMTP_HOST,
+  port: Number(process.env.SMTP_PORT || 587),
   secure: false,
-
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
   },
-
-  tls: {
-    servername: "smtp.gmail.com",
-    rejectUnauthorized: false,
-  },
-
   connectionTimeout: 20000,
   greetingTimeout: 20000,
   socketTimeout: 20000,
@@ -152,11 +142,6 @@ const transporter = nodemailer.createTransport({
 
 const verifyMailer = async () => {
   try {
-    if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
-      console.warn("⚠️ SMTP credentials missing");
-      return;
-    }
-
     await transporter.verify();
     console.log("✅ Mail server is ready");
   } catch (err) {
@@ -166,10 +151,6 @@ const verifyMailer = async () => {
 
 const sendMail = async ({ to, subject, html, attachments = [] }) => {
   try {
-    if (!to || !subject || !html) {
-      throw new Error("Missing email fields");
-    }
-
     const info = await transporter.sendMail({
       from: `"${process.env.APP_NAME || "MediBook"}" <${process.env.SMTP_USER}>`,
       to,

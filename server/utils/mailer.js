@@ -151,8 +151,10 @@ const verifyMailer = async () => {
 
 const sendMail = async ({ to, subject, html, attachments = [] }) => {
   try {
+    console.log("📧 Sending email to:", to);
+
     const info = await transporter.sendMail({
-      from: `"${process.env.APP_NAME || "MediBook"}" <${process.env.SMTP_USER}>`,
+      from: `"${process.env.APP_NAME || "MediBook"}" <${process.env.MAIL_FROM}>`,
       to,
       subject,
       html,
